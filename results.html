@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affichage des données</title>
+</head>
+
+<body>
+    <h1>Affichage des données</h1>
+    <table id="dataTable" border="1">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        fetch("/api/data")
+            .then(response => response.json())
+            .then(data => {
+                var tableBody = document.querySelector("#dataTable tbody");
+                data.forEach(function(item) {
+                    var row = tableBody.insertRow();
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    cell1.textContent = item.name;
+                    cell2.textContent = item.email;
+                });
+            });
+    </script>
+</body>
+
+</html>
