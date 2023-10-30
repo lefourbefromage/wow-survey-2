@@ -1,17 +1,36 @@
 const express = require('express');
-let app = express();
-const { v4 } = require('uuid');
+const bodyParser = require('body-parser');
+const fs = require('fs');
+const app = express();
+const port = process.env.PORT || 3000;
 
-app.get('/api', (req, res) => {
-  const path = `/api/item/${v4()}`;
-  res.setHeader('Content-Type', 'text/html');
-  res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate');
-  res.end(`Hello! Go to item: <a href="${path}">${path}</a>`);
+app.use(bodyParser.json());
+
+app.post('/api/save', (req, res) => {
+    const data = req.body;
+    fs.readFile('data.json', 'utf8', (err, jsonString) => {
+        if (err) {
+            fs.writeFileSync('data.json', JSON.stringify([data]));
+        } else {
+            const jsonArray = JSON.parse(jsonString);
+            jsonArray.push(data);
+            fs.writeFileSync('data.json', JSON.stringify(jsonArray));
+        }
+        res.json({ message: 'Données enregistrées avec succès !' });
+    });
 });
 
-app.get('/api/item/:slug', (req, res) => {
-  const { slug } = req.params;
-  res.end(`Item: ${slug}`);
+app.get('/api/data', (req, res) => {
+    fs.readFile('data.json', 'utf8', (err, jsonString) => {
+        if (err) {
+            res.status(500).json({ error: 'Erreur serveur' });
+            return;
+        }
+        const data = JSON.parse(jsonString);
+        res.json(data);
+    });
 });
 
-module.exports = app;
+app.listen(port, () => {
+    console.log(`Serveur en écoute sur le port ${port}`);
+});

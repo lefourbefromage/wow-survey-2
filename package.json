@@ -10,13 +10,8 @@
   "scripts": {
     "start": "node server.js",
     "build": "mkdir api && cp server.js api/server.js && cp data.json api/data.json"
-  },  
+  },
   "keywords": [],
   "author": "",
   "license": "ISC"
-  "scripts": {
-  "start": "node server.js",
-  "build": "mkdir api && cp server.js api/server.js && cp data.json api/data.json"
-}
-
 }
